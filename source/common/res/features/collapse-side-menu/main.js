@@ -39,18 +39,23 @@
 
           changedNodes.forEach(function (changedNode) {
             if ($('.collapsed-buttons').is(':visible') &&
-                changedNode.startsWith('navlink-') && changedNode.endsWith(' active')) {
+                changedNode.startsWith('navlink-') &&
+                changedNode.endsWith(' active')) {
               ynabToolKit.collapseSideMenu.setCollapsedSizes();
               ynabToolKit.collapseSideMenu.setActiveButton();
             }
           });
 
           if (changedNodes.has('nav-main')) {
-            var numNavLinks = $('.nav-main').children().length;
-            var collapseIndex = $('.nav-main').children()
-              .index($('.navlink-collapse'));
+            if ($('.collapsed-buttons').is(':visible')) {
+              ynabToolKit.collapseSideMenu.setCollapsedSizes();
+              ynabToolKit.collapseSideMenu.setActiveButton();
+            }
 
-            if (numNavLinks > (collapseIndex + 1)) {
+            var numNavLinks = $('.nav-main').children().length;
+            var collapseIndex = $('.nav-main').children().index($('.navlink-collapse'));
+
+            if (collapseIndex >= 0 && numNavLinks > (collapseIndex + 1)) {
               $('.navlink-collapse').remove();
 
               ynabToolKit.collapseSideMenu.setUpCollapseBtn();
@@ -61,6 +66,8 @@
 
         // Add buttons and handlers to screen
         setupBtns() {
+          ynabToolKit.debugNodes = true;
+
           // Don't proceed if buttons already exist
           if ($('.navlink-collapse').is(':visible') ||
               $('.navbar-expand').is(':visible')) {
@@ -73,8 +80,7 @@
 
         setUpCollapseBtn() {
           $('.nav-main').append(ynabToolKit.collapseSideMenu.collapseBtn);
-          $('.navlink-collapse').on('click',
-            ynabToolKit.collapseSideMenu.collapseMenu);
+          $('.navlink-collapse').on('click', ynabToolKit.collapseSideMenu.collapseMenu);
         },
 
         setUpCollapsedButtons() {
@@ -201,7 +207,7 @@
             // We don't use these in our CSS, it's mostly so other features can observe
             // for collapse/expand and update sizes / do whatever. E.g. reports needs
             // to resize its canvas when this happens.
-            $('.navlink-collapse').removeClass('expanded').addClass('collapsed');
+            $('.navlink-collapse').removeClass('collapsed').addClass('expanded');
           });
 
           $('.budget-header').animate({ left: '40px' });
@@ -228,6 +234,8 @@
                             ' button';
 
                 $(collapsedSelector).addClass('collapsed-active');
+
+                return;
               }
             }
           }
