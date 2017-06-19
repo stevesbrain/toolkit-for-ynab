@@ -103,7 +103,7 @@ Promise.all(optionsPromises).then(function () {
   injectScript('res/features/act-on-change/main.js');
 
   /* Load the ynabToolKit bundle */
-  injectScript('res/features/ynabToolKit.js');
+  injectScript('res/features/ynabToolkit.js');
 
   ensureDefaultsAreSet().then(applySettingsToDom);
 });
